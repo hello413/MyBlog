@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="itpainter.mapper.BlogMapper">
+    <resultMap id="BaseResultMap" type="itpainter.model.Blog">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="appreciation" jdbcType="BIT" property="appreciation"/>
+        <result column="content" jdbcType="VARCHAR" property="content"/>
+        <result column="first_picture" jdbcType="VARCHAR" property="firstPicture"/>
+        <result column="flag" jdbcType="VARCHAR" property="flag"/>
+        <result column="published" jdbcType="VARCHAR" property="published"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="views" jdbcType="INTEGER" property="views"/>
+        <result column="type_id" jdbcType="INTEGER" property="typeId"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="tag_ids" jdbcType="VARCHAR" property="tagIds"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, appreciation, content, first_picture, flag, published, title, update_time,
+        views, type_id, user_id, tag_ids
+    </sql>
+    <update id="foreignStart">
+        SET FOREIGN_KEY_CHECKS = 0;
+    </update>
+    <update id="foreignEnd">
+        SET FOREIGN_KEY_CHECKS = 1;
+    </update>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+
+        delete from t_blog
+        where id = #{id,jdbcType=INTEGER};
+    </delete>
+    <insert id="insert" parameterType="itpainter.model.Blog">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into t_blog (content, first_picture,
+        flag, published, title,
+        type_id,
+        user_id, tag_ids)
+        values (#{content,jdbcType=VARCHAR}, #{firstPicture,jdbcType=VARCHAR},
+        #{flag,jdbcType=VARCHAR}, #{published,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR},
+        #{typeId,jdbcType=INTEGER},
+        #{userId,jdbcType=INTEGER}, #{tagIds,jdbcType=VARCHAR})
+    </insert>
+    <update id="updateByPrimaryKey" parameterType="itpainter.model.Blog">
+    update t_blog
+    set content = #{content,jdbcType=VARCHAR},
+      first_picture = #{firstPicture,jdbcType=VARCHAR},
+      flag = #{flag,jdbcType=VARCHAR},
+      published = #{published,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      update_time = now(),
+      type_id = #{typeId,jdbcType=INTEGER},
+      tag_ids = #{tagIds,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_blog
+        where published = 1 and id = #{id,jdbcType=INTEGER}
+    </select>
+    <select id="selecByTitle" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select id from t_blog where title = #{title,jdbcType=INTEGER}
+    </select>
+    <select id="blogAsList" parameterType="itpainter.model.PageSearch" resultMap="BaseResultMap">
+        select distinct tb.* from t_blog tb,t_blog_tags tbt where tbt.blogs_id = tb.id and tb.published = 1
+        <if test="type != null and type!= ''">
+            and tb.type_id = #{type,jdbcType=VARCHAR}
+        </if>
+        <if test="tag != null and tag != ''">
+            and tbt.tags_id = #{tag,jdbcType=VARCHAR}
+        </if>
+        <if test="search != null and search != ''">
+            and tb.title like concat('%',#{search,jdbcType=VARCHAR},'%')
+        </if>
+        order by tb.update_time desc limit #{start,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+    </select>
+    <select id="blogAsUserList" parameterType="itpainter.model.PageSearch" resultMap="BaseResultMap">
+        select tb.*,tt.name type from t_blog tb,t_type tt where tb.type_id=tt.id
+        <if test="type != null and type!= ''">
+            and name like concat('%',#{type,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="search != null and search != ''">
+            and tb.title like concat('%',#{search,jdbcType=VARCHAR},'%')
+        </if>
+        order by tb.update_time desc limit #{start,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+    </select>
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_blog
+    </select>
+    <select id="countAsList" parameterType="itpainter.model.PageSearch" resultType="java.lang.Integer">
+        select COUNT(*) from (select distinct tb.* from t_blog tb,t_blog_tags tbt where tbt.blogs_id = tb.id and
+        tb.published = 1
+        <if test="type != null and type!= ''">
+            and tb.type_id = #{type,jdbcType=VARCHAR}
+        </if>
+        <if test="tag != null and tag != ''">
+            and tbt.tags_id = #{tag,jdbcType=VARCHAR}
+        </if>
+        <if test="search != null and search != ''">
+            and tb.title like concat('%',#{search,jdbcType=VARCHAR},'%')
+        </if>
+        ) temp;
+    </select>
+    <select id="countAsUserList" parameterType="itpainter.model.PageSearch" resultType="java.lang.Integer">
+        select COUNT(*) from t_blog,t_type where t_blog.type_id=t_type.id
+        <if test="type != null and type!= ''">
+            and name like concat('%',#{type,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="search != null and search != ''">
+            and title like concat('%',#{search,jdbcType=VARCHAR},'%')
+        </if>
+    </select>
+    <select id="findByTypeId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_blog
+        where published = 1 and type_id =#{id,jdbcType=INTEGER}
+    </select>
+    <select id="findByTagId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        select tbt.blogs_id
+        from t_blog_tags tbt,t_blog tb
+        where tb.published = 1 and tbt.blogs_id = tb.id and tbt.tags_id =#{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="TimeAsBlog" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_blog
+        where published = 1 order by update_time desc
+    </select>
+    <select id="BlogById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_blog
+        where id =#{id,jdbcType=INTEGER}
+        order by id
+    </select>
+</mapper>

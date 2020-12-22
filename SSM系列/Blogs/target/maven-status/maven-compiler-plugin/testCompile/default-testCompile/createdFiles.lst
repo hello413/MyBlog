@@ -1,0 +1,12 @@
+itpainter\model\TTag.class
+itpainter\model\TComment.class
+itpainter\mapper\TBlogTagsMapper.class
+itpainter\model\TBlog.class
+itpainter\mapper\TBlogMapper.class
+itpainter\mapper\TTagMapper.class
+itpainter\model\TUser.class
+itpainter\mapper\TTypeMapper.class
+itpainter\mapper\TUserMapper.class
+itpainter\mapper\TCommentMapper.class
+itpainter\model\TBlogTags.class
+itpainter\model\TType.class

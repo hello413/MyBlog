@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="itpainter.mapper.TBlogMapper">
+  <resultMap id="BaseResultMap" type="itpainter.model.TBlog">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="appreciation" jdbcType="BIT" property="appreciation" />
+    <result column="first_picture" jdbcType="VARCHAR" property="firstPicture" />
+    <result column="flag" jdbcType="VARCHAR" property="flag" />
+    <result column="published" jdbcType="VARCHAR" property="published" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="views" jdbcType="INTEGER" property="views" />
+    <result column="type_id" jdbcType="INTEGER" property="typeId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="tag_ids" jdbcType="VARCHAR" property="tagIds" />
+    <result column="content" jdbcType="LONGVARCHAR" property="content" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_blog
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="itpainter.model.TBlog">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_blog (appreciation, first_picture, flag, 
+      published, title, update_time, 
+      views, type_id, user_id, 
+      tag_ids, content)
+    values (#{appreciation,jdbcType=BIT}, #{firstPicture,jdbcType=VARCHAR}, #{flag,jdbcType=VARCHAR}, 
+      #{published,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{views,jdbcType=INTEGER}, #{typeId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, 
+      #{tagIds,jdbcType=VARCHAR}, #{content,jdbcType=LONGVARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="itpainter.model.TBlog">
+    update t_blog
+    set appreciation = #{appreciation,jdbcType=BIT},
+      first_picture = #{firstPicture,jdbcType=VARCHAR},
+      flag = #{flag,jdbcType=VARCHAR},
+      published = #{published,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      views = #{views,jdbcType=INTEGER},
+      type_id = #{typeId,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=INTEGER},
+      tag_ids = #{tagIds,jdbcType=VARCHAR},
+      content = #{content,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, appreciation, first_picture, flag, published, title, update_time, views, 
+    type_id, user_id, tag_ids, content
+    from t_blog
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, appreciation, first_picture, flag, published, title, update_time, views, 
+    type_id, user_id, tag_ids, content
+    from t_blog
+  </select>
+</mapper>

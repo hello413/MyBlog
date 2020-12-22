@@ -1,0 +1,30 @@
+#container {
+    width: 100%;
+    margin: auto;
+}
+#container div {
+    text-align: center;
+    box-shadow: 0 4px 15px -5px #555;
+    background-color: #fff;
+    width:220px;
+    padding:2px;
+    margin:5px;
+    float: left;
+}
+#container > div img {
+    padding: 0px;
+    display: block;
+}
+#containers {
+    width: 100%;
+    margin: auto;
+}
+#containers div {
+    text-align: center;
+    box-shadow: 0 4px 15px -5px #555;
+    background-color: #fff;
+    width:340px;
+    padding:2px;
+    margin:5px;
+    float: left;
+}

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>文件下载</title>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
+    <script href="js/jquery-3.3.1.js"></script>
+    <script src="js/getParameter.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
+    <link rel="stylesheet" href="css/me.css">
+    <link rel="stylesheet" href="css/download.css">
+    <script>
+        $.post("/blog/api/visitor/getFile", {}, function (data) {
+            if (data.success) {
+                var map = data.data;
+                for (var key in map) {
+                    if (key == "图片") {
+                        var lis = '<h2 style="color: green;margin-top:20px;margin-left: 50px"> 图片</h2>\n' +
+                            '    <span style="width: 80px;height: 50px;float: left">        </span>\n'
+                        for (var value in map[key]) { //map key
+                            var li = '<div>\n' +
+                                '        <img style="width:200px;" src="' + map[key][value].file + '">\n' +
+                                '        <h3><a href="/blog/api/visitor/download?filename=' + map[key][value].file + '">' + map[key][value].name + '</a>下载</h3>\n' +
+                                '    </div>'
+                            lis += li
+                        }
+                    }
+                    $("#container").html(lis)
+                    if (key == "视频") {
+                        var lix = '<h2 style="color: green;margin-top:20px;margin-left: 50px"> 视频</h2>\n' +
+                            '    <span style="width: 80px;height: 50px;float: left">        </span>\n'
+                        for (var value in map[key]) { //map key
+                            var li = '<div>\n' +
+                                '        <video width="320" height="240" controls="controls">\n' +
+                                '            <source src="' + map[key][value].file + '" type="video/mp4">\n' +
+                                '            Your browser does not support the video tag.\n' +
+                                '        </video>\n' +
+                                '        <h3><a href="/blog/api/visitor/download?filename=' + map[key][value].name + '">' + map[key][value].name + '</a>下载</h3>\n' +
+                                '    </div>'
+                            lix += li
+                        }
+                    }
+                    $("#containers").html(lix)
+                    if (key == "文本、压缩包或者其他格式") {
+                        var liq = '<h2 style="color: green;margin-top:20px;margin-left: 50px"> 文本、压缩包或者其他格式</h2>\n' +
+                            '    <span style="width: 80px;height: 50px;float: left">        </span>\n'
+                        for (var value in map[key]) { //map key
+                            var li = '<a href="/blog/api/visitor/download?filename=' + map[key][value].name + '">' + map[key][value].name + '</a>下载'+
+                                    '&emsp;&emsp;&emsp;&emsp;'
+                            liq += li
+                        }
+                    }
+                    $("#containerx").html(liq)
+                }
+            }
+        })
+    </script>
+</head>
+<body>
+<div>
+    <nav class="ui inverted attached segment m-padded-tb-mini m-shadow-small">
+        <div class="ui container">
+            <div class="ui inverted secondary stackable menu">
+                <h2 class="ui teal header item">IT_Painter</h2>
+                <a href="index.html" class="m-item item m-mobile-hide"><i class="mini home icon"></i>首页</a>
+                <a href="types.html" class="m-item item m-mobile-hide"><i class="mini idea icon"></i>分类</a>
+                <a href="tags.html" class="m-item item m-mobile-hide"><i class="mini tags icon"></i>标签</a>
+                <a href="archives.html" class="m-item item m-mobile-hide"><i class="mini clone icon"></i>归档</a>
+                <a href="download.html" class="active m-item item m-mobile-hide"><i class="mini clone icon"></i>文件下载</a>
+                <a href="about.html" class="m-item item m-mobile-hide"><i class="mini info icon"></i>关于我</a>
+                <div class="right m-item item m-mobile-hide">
+                    <div class="ui icon inverted transparent input m-margin-tb-tiny">
+                        <input type="text" placeholder="Search...." id="search-input">
+                        <i class="search link icon" id="search-button"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--这块...-->
+        <a href="#" class="ui menu toggle black icon button m-right-top m-mobile-show">
+            <i class="sidebar icon"></i>
+        </a>
+    </nav>
+</div>
+<!--<img src="/blog/img/九尾.jpg" style="width: 500px"><br>-->
+
+<div id="container">
+    <h2 style="color: green;margin-top:20px;margin-left: 50px"> 图片</h2>
+    <span style="width: 80px;height: 50px;float: left">        </span>
+    <div>
+        <img style="width:200px;" src="/blog/img/九尾.jpg">
+        <h3><a href="/blog/download?filename=九尾.jpg">九尾</a>下载</h3>
+    </div>
+    <div>
+        <img style="width: 200px" src="/blog/img/九尾.jpg">
+        <h3><a href="/blog/download?filename=九尾.jpg">九尾</a>下载</h3>
+    </div>
+</div>
+<div style="height: 250px">
+</div>
+<hr>
+<div id="containers">
+    <h2 style="color: green;margin-top:20px;margin-left: 50px"> 视频</h2>
+    <span style="width: 80px;height: 50px;float: left">        </span>
+    <div>
+        <video width="320" height="240" controls="controls">
+            <source src="/blog/img/1.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <h3><a href="/blog/download?filename=1.mp4">视频</a>下载</h3>
+    </div>
+    <div>
+        <video width="320" height="240" controls="controls">
+            <source src="/blog/img/1.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <h3><a href="/blog/download?filename=1.mp4">视频</a>下载</h3>
+    </div>
+</div>
+<div style="height: 350px">
+</div>
+<hr>
+<div id="containerx">
+    <h2 style="color: green;margin-top:20px;margin-left: 50px"> 文本、压缩包或者其他格式</h2>
+    <span style="width: 80px;height: 50px;float: left">        </span>
+    <a href="/blog/download?filename=压缩包.zip">压缩包</a>下载
+    <div style="width: 50px"></div>
+</div>
+<div style="height: 50px"></div>
+<div id="footer"></div>
+<script>
+    $.get("foot.html", function (data) {
+        $("#footer").html(data);
+    });
+</script>
+</body>
+</html>

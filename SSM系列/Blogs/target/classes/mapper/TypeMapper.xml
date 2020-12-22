@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="itpainter.mapper.TypeMapper">
+    <resultMap id="BaseResultMap" type="itpainter.model.Type">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+    </resultMap>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_type
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <update id="updateByPrimaryKey" parameterType="itpainter.model.Type">
+    update t_type
+    set name = #{name,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select id, name
+        from t_type
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <select id="selectByName" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select id, name
+        from t_type
+        where name = #{name,jdbcType=VARCHAR}
+    </select>
+    <select id="selectAll" resultMap="BaseResultMap">
+        select id, name
+        from t_type
+    </select>
+    <select id="typeAsList" resultMap="BaseResultMap">
+        select distinct tt.* from t_type tt join t_blog tb on tb.type_id = tt.id where tb.published = 1;
+    </select>
+    <select id="findTypeNameById" parameterType="java.lang.Integer" resultType="java.lang.String">
+        select name from t_type where id = #{id,jdbcType=INTEGER}
+    </select>
+</mapper>

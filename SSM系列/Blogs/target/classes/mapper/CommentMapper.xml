@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="itpainter.mapper.CommentMapper">
+  <resultMap id="BaseResultMap" type="itpainter.model.Comment">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="avatar" jdbcType="VARCHAR" property="avatar" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="nickname" jdbcType="VARCHAR" property="nickname" />
+    <result column="blog_id" jdbcType="INTEGER" property="blogId" />
+    <result column="parent_comment_id" jdbcType="INTEGER" property="parentCommentId" />
+    <result column="admin_comment" jdbcType="BIT" property="adminComment" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_comment
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="itpainter.model.Comment">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_comment (avatar, content, create_time, 
+      email, nickname, blog_id, 
+      parent_comment_id, admin_comment)
+    values (#{avatar,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{email,jdbcType=VARCHAR}, #{nickname,jdbcType=VARCHAR}, #{blogId,jdbcType=INTEGER}, 
+      #{parenCommentId,jdbcType=INTEGER}, #{adminComment,jdbcType=BIT})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="itpainter.model.Comment">
+    update t_comment
+    set avatar = #{avatar,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      email = #{email,jdbcType=VARCHAR},
+      nickname = #{nickname,jdbcType=VARCHAR},
+      blog_id = #{blogId,jdbcType=INTEGER},
+      parent_comment_id = #{parenCommentId,jdbcType=INTEGER},
+      admin_comment = #{adminComment,jdbcType=BIT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, avatar, content, create_time, email, nickname, blog_id, parent_comment_id, 
+    admin_comment
+    from t_comment
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, avatar, content, create_time, email, nickname, blog_id, parent_comment_id, 
+    admin_comment
+    from t_comment
+  </select>
+    <select id="comment" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select c.*
+        from t_comment c,t_blog b
+        where b.published = 1 and b.id = c.blog_id and c.blog_id = #{id,jdbcType=INTEGER}
+  </select>
+</mapper>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="itpainter.mapper.TBlogTagsMapper">
+  <resultMap id="BaseResultMap" type="itpainter.model.TBlogTags">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="blogs_id" jdbcType="INTEGER" property="blogsId" />
+    <result column="tags_id" jdbcType="INTEGER" property="tagsId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_blog_tags
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="itpainter.model.TBlogTags">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_blog_tags (blogs_id, tags_id)
+    values (#{blogsId,jdbcType=INTEGER}, #{tagsId,jdbcType=INTEGER})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="itpainter.model.TBlogTags">
+    update t_blog_tags
+    set blogs_id = #{blogsId,jdbcType=INTEGER},
+      tags_id = #{tagsId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, blogs_id, tags_id
+    from t_blog_tags
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, blogs_id, tags_id
+    from t_blog_tags
+  </select>
+</mapper>
